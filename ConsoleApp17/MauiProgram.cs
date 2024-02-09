@@ -10,8 +10,16 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
-        builder
-            .UseMauiApp<App>()
+            builder.UseBurkusMvvm(burkusMvvm =>
+            {
+                burkusMvvm.OnStart(async (navigationService, serviceProvider) =>
+                {
+
+                        // we are logged in to the app
+                        await navigationService.Navigate("/MainPage");
+                });
+            })
+            .RegisterViews()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -23,5 +31,13 @@ public static class MauiProgram
 #endif
 
         return builder.Build();
+    }
+
+
+    public static MauiAppBuilder RegisterViews(this MauiAppBuilder mauiAppBuilder)
+    {
+        mauiAppBuilder.Services.AddTransient<MainPage>();
+
+        return mauiAppBuilder;
     }
 }
